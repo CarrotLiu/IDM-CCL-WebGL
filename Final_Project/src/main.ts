@@ -2,7 +2,7 @@ import './style.scss';
 import * as THREE from 'three';
 // import * as ML5 from 'ml5';
 // import * as p5 from 'p5';
-import { Raycaster, ShaderMaterial, Shading, Vector2, Scene, PerspectiveCamera } from 'three';
+import { Scene, PerspectiveCamera } from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
@@ -37,9 +37,6 @@ let videoElement: any;
 var video: any = document.getElementById("video");
 var canvas = document.getElementById("canvas");
 var sketch = function (p: any) {
-
-	let x = 100; 
-	let y = 100;
   
 	p.setup = function() {
 	  	let canvas: any = p.createCanvas(window.innerWidth, window.innerHeight);
@@ -69,16 +66,11 @@ var sketch = function (p: any) {
 				viewOne.onHandMove(handPosition, viewOne.wrist, 30);
 			}
 		}
-		// We can call both functions to draw all keypoints and the skeletons
-		
 	}
-
   };
-
 let myp5 = new p5(sketch);
 
 let viewOne: ViewOne;
-
 let views: BaseView[] = [];
 
 let texts = [];
@@ -102,7 +94,6 @@ function createNewText(text_msg: any) {
 function main() {
 	initScene();
 	initStats();
-	// setupPoseNet();
 	initListeners();
 }
 
@@ -123,12 +114,6 @@ function initScene() {
 
 	viewOne = new ViewOne(model, renderer);
 	views.push(viewOne);
-	raycaster = new THREE.Raycaster();
-	const uniforms = {
-		u_time: { type: 'f', value: 1.0 },
-		u_resolution: { type: 'v2', value: new THREE.Vector2(800, 800) },
-		// u_mouse: { type: 'v2', value: new THREE.Vector2() },
-	};
 
 	// // Init animation
 	animate();
