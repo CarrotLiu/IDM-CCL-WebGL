@@ -13,6 +13,7 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "isolatedModules": true,
+    //type@ignore
     "types": ["vite/client"]
   },
   "watchOptions": {
