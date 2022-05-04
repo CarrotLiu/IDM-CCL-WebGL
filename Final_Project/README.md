@@ -32,41 +32,30 @@ this.camera.position.z = 4;
 this.scene.background = new Color(0xffffff); 
 ```
 Blender modeling and rigging:
+Modeling:
+
 ![blender1](https://github.com/CarrotLiu/IDM-CCL-WebGL/blob/main/Final_Project/blender1.png)
+
+Rigging:
 
 ![blender2](https://github.com/CarrotLiu/IDM-CCL-WebGL/blob/main/Final_Project/blender2.png)
 
+In the scene:
+
 ![blender3](https://github.com/CarrotLiu/IDM-CCL-WebGL/blob/main/Final_Project/blender3.png)
 
-![blender4](https://github.com/CarrotLiu/IDM-CCL-WebGL/blob/main/Final_Project/blender4.png)
+
+Find the joint name in console message:
+![console1](https://github.com/CarrotLiu/IDM-CCL-WebGL/blob/main/Final_Project/console1.jpg)
 
 
 Mashing up ml5, p5 and three.js in typescript:
-This part is the hardest for me... Initially, I tried to import the p5 and ml5 using npm. But typescript keep complaining that the module is not declared. I tried several
+This part is the hardest for me... Initially, I tried to import the p5 and ml5 using npm. But typescript keep complaining that the module is not declared. I tried several bash commands, as well as changing the coding of tsconfig.json, package-loack.json. But the import command keeps returns error about ml5js.
+With the help of Professor Cotter, I managed to use the following code to silence the error:
 ```javascript
-
+declare let ml5: any;
 ```
 
-
-
-I also added a gui, which allows users to change the color of the painted voxel:
-
-```javascript
-function initGUI() {
-	var params = {
-		color: 0x733C3C
-	};
-	
-	var gui = new dat.GUI();
-	
-	var folder = gui.addFolder( 'MATERIAL' );
-	
-	folder.addColor( params, 'color' )
-		  .onChange( function() { voxel.material.color.set( params.color ); } );
-	
-	folder.open();
-}
-```
 I tried to load the camera capture and p5 canvas:
 ```javascript
 console.log("Start Up PoseNet")
@@ -75,10 +64,31 @@ canvas.hide();
 video = p5.createCapture(videoOptions);
 video.hide();
 ```
-But it returns an error saying that createCanvas is not a function:
+But it returns an error saying that createCanvas/createCapture is not a function:
+![error1](https://github.com/CarrotLiu/IDM-CCL-WebGL/blob/main/Final_Project/blender4.png)
 
+I tried several ways including adding "declare let p5:any" to javascript, using cdn link rather than npm import, using terminal commands, etc.
+Finally, I get rid of the module import method and use p5 instance instead:
 
-In the future, I will try to find out how to implement the fly control properly.
+```javascript
+var sketch = function (p: any) {
+	p.setup = function() {
+	  	let canvas: any = p.createCanvas(window.innerWidth, window.innerHeight);
+		video = p.createCapture(videoOptions);
+	};
+	p.draw = function(){
+	}
+  };
+```
+
+I call the hand animation function in p5 draw function. 
+```javascript
+handPosition = {x: predictions[0].landmarks[9][0], y: predictions[0].landmarks[9][1]}
+viewOne.onHandMove(handPosition, viewOne.elbow, 50);
+viewOne.onHandMove(handPosition, viewOne.wrist, 30);
+```
+
+In the future, I will continue to develop the alien's pattern animation in threejs.
 
 ## Credit
 [Three.js skeleton interaction](https://tympanus.net/codrops/2019/10/14/how-to-create-an-interactive-3d-character-with-three-js/)
